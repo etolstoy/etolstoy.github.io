@@ -1,29 +1,29 @@
-# visit https://github.com/mojombo/jekyll/wiki/Configuration for more settings
+# Dependencies
+markdown:         redcarpet
+highlighter:      rouge
+gems:             
+     - jekyll-paginate
+     - jekyll-gist
 
-paginate: 10 # pagination based on number of posts
-paginate_path: "page:num"
-exclude: ["README.md"] # files to exclude
-highlighter: rouge
-markdown: kramdown
-disqus: dbyll
+# Permalinks
+permalink:        pretty
 
-defaults:
-  -
-    scope:
-      path: "" # empty string for all files
-    values:
-      title: Egor Tolstoy
+# Setup
+title:            Egor Tolstoy
+tagline:          'iOS Developer'
+description:      'iOS Team Lead @ <a href="http://rambler-co.ru/" target="_blank">Rambler&Co</a>.<br> Interested in software design and task automation.<br>Twitter: <a href="http://twitter.com/igrekde" target="_blank">@igrekde</a>'
+url:              http://etolstoy.ru
+baseurl:          /
 
-description: Stylish Jekyll Theme
 author:
-  name: Egor Tolstoy
-  email: igrekde@gmail.com
-  github: etolstoy
-  twitter: igrekde
-  linkedin: etolstoy
-  bio: Team Lead @ Rambler&Co
+  name:           'Egor Tolstoy'
+  url:            https://twitter.com/etolstoy
+  email_md5:      faf4a633b0d1e32a07a071039686c868
 
-rss_path: feed.xml
-categories_path: categories.html
+paginate:         5
 
-BASE_PATH:
+# Custom vars
+version:          2.1.0
+
+github:
+  repo:           https://github.com/poole/hyde
