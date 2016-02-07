@@ -14,6 +14,7 @@ tagline:          'iOS Developer'
 description:      'iOS Team Lead @ <a href="http://rambler-co.ru/" target="_blank">Rambler&Co</a>.<br> Interested in software design and task automation.<br>Twitter: <a href="http://twitter.com/igrekde" target="_blank">@igrekde</a>'
 url:              http://etolstoy.ru
 baseurl:          /
+excerpt_separator: <!--more-->
 
 author:
   name:           'Egor Tolstoy'
