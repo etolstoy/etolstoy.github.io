@@ -8,17 +8,7 @@
     {% include sidebar.html %}
 
     <div class="content container">
-	    {% for post in site.posts %}
-	    	<div class="post">
-	    		<h1 class="post-title">
-	    			<a href="{{ BASE_PATH }}{{ post.url }}">{{ post.title }}</a>
-	    		</h1>
-	    		<span class="post-date">{{ post.date | date: "%B %-d, %Y" }}</span>
-	    		{% if post.excerpt %}
-	    			{{ post.excerpt }}
-				{% endif %}
-	    	</div>
-	    {% endfor %}  
+	    {{ content }}  
     </div>
   </body>
 </html>
