@@ -20,6 +20,9 @@ Speaking at tech conferences is a great way of sharing knowledge. I keep on gath
 			<p><i class="fa fa-map-signs"></i> {{ talk.place }}</p>
 			<p><i class="fa fa-calendar-check-o"></i> {{ talk.date }}</p>
 			<p><i class="fa fa-cloud-upload"></i> <a href={{ talk.video }}>Recorded Video</a></p>
+			{% if talk.code %}
+            	<p><i class="fa fa-code"></i> <a href={{ talk.code }}>Code</a></p>
+            {% endif %}
 		</div>
 	</li>
 {% endfor %}

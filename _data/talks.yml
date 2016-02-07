@@ -7,6 +7,7 @@
   preview: '/public/img/speaking/talks/generamba-rambler-ios-5.jpg'
   slides: 'https://speakerdeck.com/etolstoy/gienieramba-i-prochiie-aspiekty-kodoghienieratsii-v-viper'
   video: 'http://www.youtube.com/watch?v=NXNiN9FaUnY'
+  code: 'https://github.com/rambler-ios/Generamba'
 
 - title: 'The Secrets of VIPER'
   conference: 
