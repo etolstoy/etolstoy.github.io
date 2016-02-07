@@ -54,6 +54,12 @@
 .talk-slides img {
   width: 100%;
   border-radius: 0;
+  cursor: zoom-in;
+  transition: opacity 0.08s ease-in-out;
+}
+
+.talk-slides img:hover {
+  opacity: 0.3; 
 }
 
 .talk-info {
