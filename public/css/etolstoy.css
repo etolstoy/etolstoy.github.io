@@ -3,6 +3,15 @@
  */
 
 /*
+ * General
+ */
+
+.deprecated, .deprecated a {
+  color: #BEA586;
+  font-size: 0.7rem;
+}
+
+/*
  * Sidebar
  */
 .sidebar-about h1 {
