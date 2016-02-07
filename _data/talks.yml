@@ -1,7 +1,48 @@
+- title: 'Generamba and Code Generation'
+  conference: 
+    name: 'Rambler.iOS #5'
+    link: 'https://twitter.com/rambler_ios'
+  place: 'Moscow, Russia'
+  date: 2015-12-22
+  preview: '/public/img/speaking/talks/generamba-rambler-ios-5.jpg'
+  slides: 'https://speakerdeck.com/etolstoy/gienieramba-i-prochiie-aspiekty-kodoghienieratsii-v-viper'
+  video: 'http://www.youtube.com/watch?v=NXNiN9FaUnY'
+
+- title: 'The Secrets of VIPER'
+  conference: 
+    name: '#{MBLT}Dev ''15'
+    link: 'http://mbltdev.ru/'
+  place: 'Moscow, Russia'
+  date: 2015-11-17
+  preview: '/public/img/speaking/talks/viper-mbltdev-2015.jpg'
+  slides: 'https://speakerdeck.com/etolstoy/viper-ili-to-o-chiem-vsie-ghovoriat-no-nikto-nie-rasskazyvaiet'
+  video: 'https://www.youtube.com/watch?v=dGTdlNjh_5U'
+
+- title: 'Synchronization Problems'
+  conference: 
+    name: 'Rambler.iOS #4'
+    link: 'https://twitter.com/rambler_ios'
+  place: 'Moscow, Russia'
+  date: 2015-09-24
+  preview: '/public/img/speaking/talks/synchronization-problems-rambler-ios-4.jpg'
+  slides: 'http://www.slideshare.net/Rambler-iOS/ramblerios-4'
+  video: 'http://www.youtube.com/watch?v=y0UQEioIgTQ'
+  code: 'https://github.com/rambler-digital-solutions/synchronization-problems'
+
+- title: 'iOS Application Exploitation'
+  conference: 
+    name: 'PHDays V'
+    link: 'http://2015.phdays.ru/'
+  place: 'Moscow, Russia'
+  date: 2015-05-27
+  preview: '/public/img/speaking/talks/ios-app-security-phdays-2015.jpg'
+  slides: 'http://www.slideshare.net/etolstoy/ios-application-security'
+  video: 'http://www.phdays.ru/broadcast/'
+
 - title: 'Dependency Injection in iOS'
   conference: 
     name: 'Rambler.iOS #3'
-    link: 'blablabla'
+    link: 'https://twitter.com/rambler_ios'
   place: 'Moscow, Russia'
   date: 2015-05-14
   preview: '/public/img/speaking/talks/dependency-injection-rambler-ios-3.jpg'

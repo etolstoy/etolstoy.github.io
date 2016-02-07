@@ -5,9 +5,8 @@ title: Speaking
 
 Speaking at tech conferences is a great way of sharing knowledge. I keep on gathering experience in this area in the course of a last year.
 
-#### Future
+---
 
-#### Past
 <div class="talks">
 <ul>
 {% for talk in site.data.talks %}
