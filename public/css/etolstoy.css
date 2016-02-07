@@ -1,0 +1,36 @@
+/*
+ * Custom CSS for etolstoy.com
+ */
+
+ .sidebar-about h1 {
+  color: #fff;
+  margin-top: 0;
+  font-family: "PT Sans", serif;
+  font-size: 2.6rem;
+}
+
+.image-circle {
+  border-radius: 50%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (min-width: 48em) {
+  .image-circle {
+	margin-left: 0;
+  }
+}
+
+.lead {
+  font-size: 1rem;
+}
+
+ /* Theme */
+.theme-etolstoy .sidebar {
+  background-color: #674941;
+}
+.theme-etolstoy .content a,
+.theme-etolstoy .related-posts li a:hover {
+  color: #8E5B3E;
+}

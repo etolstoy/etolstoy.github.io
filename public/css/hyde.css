@@ -45,7 +45,6 @@ html {
   }
 }
 
-
 /*
  * Sidebar
  *
@@ -79,8 +78,8 @@ html {
 .sidebar-about h1 {
   color: #fff;
   margin-top: 0;
-  font-family: "PT Sans", serif;
-  font-size: 2.6rem;
+  font-family: "Abril Fatface", serif;
+  font-size: 3.25rem;
 }
 
 /* Sidebar nav */
@@ -141,14 +140,6 @@ a.sidebar-nav-item:focus {
   }
 }
 
-.image-circle {
-  border-radius: 50%;
-}
-
-.lead {
-  font-size: 1rem;
-}
-
 /*
  * Reverse layout
  *
@@ -181,15 +172,6 @@ a.sidebar-nav-item:focus {
  * As of v1.1, Hyde includes optional themes to color the sidebar and links
  * within blog posts. To use, add the class of your choosing to the `body`.
  */
-
- /* Red */
-.theme-etolstoy .sidebar {
-  background-color: #674941;
-}
-.theme-etolstoy .content a,
-.theme-etolstoy .related-posts li a:hover {
-  color: #8E5B3E;
-}
 
 /* Base16 (http://chriskempson.github.io/base16/#default) */
 
