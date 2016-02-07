@@ -3,28 +3,24 @@ layout: page
 title: Speaking
 ---
 
-<p class="message">
-  Hey there! This page is included as an example. Feel free to customize it for your own use upon downloading. Carry on!
-</p>
+Speaking at tech conferences is a great way of sharing knowledge. I keep on gathering experience in this area in the course of a last year.
 
-In the novel, *The Strange Case of Dr. Jeykll and Mr. Hyde*, Mr. Poole is Dr. Jekyll's virtuous and loyal butler. Similarly, Poole is an upstanding and effective butler that helps you build Jekyll themes. It's made by [@mdo](https://twitter.com/mdo).
+#### Future
 
-There are currently two themes built on Poole:
-
-* [Hyde](http://hyde.getpoole.com)
-* [Lanyon](http://lanyon.getpoole.com)
-
-Learn more and contribute on [GitHub](https://github.com/poole).
-
-## Setup
-
-Some fun facts about the setup of this project include:
-
-* Built for [Jekyll](http://jekyllrb.com)
-* Developed on GitHub and hosted for free on [GitHub Pages](https://pages.github.com)
-* Coded with [Sublime Text 2](http://sublimetext.com), an amazing code editor
-* Designed and developed while listening to music like [Blood Bros Trilogy](https://soundcloud.com/maddecent/sets/blood-bros-series)
-
-Have questions or suggestions? Feel free to [open an issue on GitHub](https://github.com/poole/issues/new) or [ask me on Twitter](https://twitter.com/mdo).
-
-Thanks for reading!
+#### Past
+<div class="talks">
+<ul>
+	<li>
+		<div class="talk-slides">
+  			<a href="https://speakerdeck.com/etolstoy/dependency-injection-v-ios"><img src="/public/img/speaking/talks/dependency-injection-rambler-ios-3.jpg"></a>
+		</div>
+		<div class="talk-info">
+			<h4>Dependency Injection in iOS</h4>
+			<p><i class="fa fa-comments"></i> Rambler.iOS #3</p>
+			<p><i class="fa fa-map-signs"></i> Moscow, Russia</p>
+			<p><i class="fa fa-calendar-check-o"></i> October 23, 2015</p>
+			<p><i class="fa fa-cloud-upload"></i> Recorded Video</p>
+		</div>
+	</li>
+</ul>
+</div>
