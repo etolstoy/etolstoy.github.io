@@ -10,17 +10,19 @@ Speaking at tech conferences is a great way of sharing knowledge. I keep on gath
 #### Past
 <div class="talks">
 <ul>
+{% for talk in site.data.talks %}
 	<li>
 		<div class="talk-slides">
-  			<a href="https://speakerdeck.com/etolstoy/dependency-injection-v-ios"><img src="/public/img/speaking/talks/dependency-injection-rambler-ios-3.jpg"></a>
+  			<a href={{ talk.slides }}><img src={{ talk.preview }}></a>
 		</div>
 		<div class="talk-info">
-			<h4>Dependency Injection in iOS</h4>
-			<p><i class="fa fa-comments"></i> Rambler.iOS #3</p>
-			<p><i class="fa fa-map-signs"></i> Moscow, Russia</p>
-			<p><i class="fa fa-calendar-check-o"></i> October 23, 2015</p>
-			<p><i class="fa fa-cloud-upload"></i> Recorded Video</p>
+			<h4>{{ talk.title }}</h4>
+			<p><i class="fa fa-comments"></i> <a href={{ conference.link }}>{{ talk.conference.name }}</a></p>
+			<p><i class="fa fa-map-signs"></i> {{ talk.place }}</p>
+			<p><i class="fa fa-calendar-check-o"></i> {{ talk.date }}</p>
+			<p><i class="fa fa-cloud-upload"></i> <a href={{ talk.video }}>Recorded Video</a></p>
 		</div>
 	</li>
+{% endfor %}
 </ul>
 </div>

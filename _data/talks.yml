@@ -1,0 +1,9 @@
+- title: 'Dependency Injection in iOS'
+  conference: 
+    name: 'Rambler.iOS #3'
+    link: 'blablabla'
+  place: 'Moscow, Russia'
+  date: 2015-05-14
+  preview: '/public/img/speaking/talks/dependency-injection-rambler-ios-3.jpg'
+  slides: 'https://speakerdeck.com/etolstoy/dependency-injection-v-ios'
+  video: 'https://www.youtube.com/watch?v=LO59z3fjc9k'
