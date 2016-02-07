@@ -3,28 +3,15 @@ layout: page
 title: About
 ---
 
-<p class="message">
-  Hey there! This page is included as an example. Feel free to customize it for your own use upon downloading. Carry on!
-</p>
+I'm a passionate software developer from Moscow, Russia. Besides iOS development I spend a lot of time learning and sharing my knowledge by articles, public speaking and mentoring.
 
-In the novel, *The Strange Case of Dr. Jeykll and Mr. Hyde*, Mr. Poole is Dr. Jekyll's virtuous and loyal butler. Similarly, Poole is an upstanding and effective butler that helps you build Jekyll themes. It's made by [@mdo](https://twitter.com/mdo).
+I'm lucky to work in a great team of talented developers at [Rambler&Co](https://github.com/orgs/rambler-ios/people). I spread my attitude towards the importance of Open Source and community evolving among them. One of its outcomes is a [regular meetup](http://www.youtube.com/playlist?list=PL7JJcdGH5aCFg8XcsyNfxL4mSOv9lBw5d) held in our Moscow office, where we share our experience in architecture, patterns, code style and other aspects of mobile development.
 
-There are currently two themes built on Poole:
+---
 
-* [Hyde](http://hyde.getpoole.com)
-* [Lanyon](http://lanyon.getpoole.com)
+#### Open Source Projects
 
-Learn more and contribute on [GitHub](https://github.com/poole).
-
-## Setup
-
-Some fun facts about the setup of this project include:
-
-* Built for [Jekyll](http://jekyllrb.com)
-* Developed on GitHub and hosted for free on [GitHub Pages](https://pages.github.com)
-* Coded with [Sublime Text 2](http://sublimetext.com), an amazing code editor
-* Designed and developed while listening to music like [Blood Bros Trilogy](https://soundcloud.com/maddecent/sets/blood-bros-series)
-
-Have questions or suggestions? Feel free to [open an issue on GitHub](https://github.com/poole/issues/new) or [ask me on Twitter](https://twitter.com/mdo).
-
-Thanks for reading!
+* [Generamba](https://github.com/rambler-ios/Generamba) - a flexible iOS code generator
+* [Typhoon](https://github.com/appsquickly/Typhoon) - the best choice for DI in Objective-C
+* [The Book of VIPER](https://github.com/rambler-ios/The-Book-of-VIPER) - a collection of articles on building and maintaining the VIPER architecture
+* [DVIA](https://github.com/prateek147/DVIA) - an iOS application that is damn vulnerable
