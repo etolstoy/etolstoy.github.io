@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Generamba
+description: Generamba is a sweet code generator for iOS projects, supports Objective-C and Swift
 ---
 
 #### TL;DR

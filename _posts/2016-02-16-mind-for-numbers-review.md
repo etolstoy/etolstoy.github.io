@@ -1,6 +1,7 @@
 ---
 layout: post
 title: «A Mind For Numbers» in a Nutshell
+description: A brief overview of Barbara Oakley "Mind For Numbers" book
 ---
 
 This post has appeared primarily thanks to [Sergey Teplyakov blog](http://sergeyteplyakov.blogspot.ru/). Firstly [his post](http://sergeyteplyakov.blogspot.ru/2016/01/book-review-mind-for-numbers.html) about Barbara Oakley book took my attention. Secondly - the practice of writing brief reviews of noticeable materials seems like a good investment of time and a way to organize thoughts.
