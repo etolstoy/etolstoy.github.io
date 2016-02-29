@@ -4,22 +4,26 @@ title: Using UIWebView with VIPER
 description: How to separate UIWebView responsibilities using VIPER architecture
 ---
 
-I was working on [Rambler.Mail](https://itunes.apple.com/app/id981598964) for the whole year. It's a client for one of the most popular Russian e-mail providers. The application itself is rather ordinary, it has the very same features you'd expect from an e-mail application - and nothing more. However, I spent a lot of time building a solid and maintainable architecture for both business logic and presentation layers.
+I was working on [Rambler.Mail](https://itunes.apple.com/app/id981598964) project for the whole year. It's a client for one of the most popular Russian e-mail providers. The application itself is rather ordinary, it has the very same features you'd expect from an e-mail application - and nothing more. However, I spent a lot of time building a solid and maintainable architecture for both business logic and presentation layers.
 
-One of the most interesting features was a rendering engine for displaying e-mail content. I won't dive into implementation details - all you need to know at the moment is that we used `UIWebView` and [WebViewJavascriptBridge](https://github.com/marcuswestin/WebViewJavascriptBridge) - a great library for bridging native code and javascript. The result system was monlithic, difficult to understand and reason about - undoubtedly not the best piece of software I've ever built. Before I had a chance to refactor it I was switched to another project. To my great surprise I've encountered there a very similar task - I had to build a rendering engine for displaying blog posts. This time I was prepared well - I already knew how **NOT** to build such systems. So, instead of spaghetti code, I've used another approach - the cell containing `UIWebView` was built using the **VIPER** architecture.
+One of the most interesting features was a rendering engine for displaying e-mail content. I won't dive into implementation details - all you need to know at the moment is that we used `UIWebView` and [WebViewJavascriptBridge](https://github.com/marcuswestin/WebViewJavascriptBridge) - a great library for bridging native code and javascript. The result system was monlithic, difficult to understand and reason about - undoubtedly not the best piece of software I've ever built. 
+
+Before I had a chance to refactor it I was switched to another project. To my great surprise I've encountered there a very similar task - I had to build a rendering engine for displaying blog posts. This time I was prepared well - I already knew how **NOT** to build such systems. So, instead of spaghetti code, I've used another approach - the cell containing `UIWebView` was built using the **VIPER** architecture.
+
+<!--more-->
 
 The fundamental idea of my implementation was to separate `UIWebView` responsibilities in two groups: `<WebEngine>`, which is a dependency of the `Interactor`, and `<WebPresentation>`, which belongs to the `View`.
 
 Their responsibilities are:
 
-**<WebEngine>**
+**WebEngine**
 
 - Loads HTML code,
 - Executes JS scripts,
 - Renders content with a set of predefined actions,
 - Notifies the `Interactor` of drawing, rendering and loading processes completion.
 
-**<WebPresentation>**
+**WebPresentation**
 
 - Notifies the `View` of different events: links, images and different embeds taps,
 - Provides an interface of obtaining real content size and other view properties.
