@@ -1,3 +1,12 @@
+- title: 'Pagination Demystified'
+  conference: 
+    name: 'Rambler.iOS #6'
+    link: 'https://twitter.com/rambler_ios'
+  place: 'Moscow, Russia'
+  date: 2016-03-30
+  preview: '/public/img/speaking/talks/pagination-demystified-rambler-ios-6.jpeg'
+  slides: 'https://speakerdeck.com/etolstoy/pagination-demystified'
+
 - title: 'Generamba and Code Generation'
   conference: 
     name: 'Rambler.iOS #5'
