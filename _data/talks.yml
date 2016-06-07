@@ -1,3 +1,12 @@
+- title: 'Typhoon Explained'
+  conference: 
+    name: 'Mobius 2016'
+    link: 'http://mobiusconf.com/'
+  place: 'St. Petersburg, Russia'
+  date: 2016-06-04
+  preview: '/public/img/speaking/talks/typhoon-explained-mobius-16.jpg'
+  slides: 'https://speakerdeck.com/etolstoy/typhoon-explained'
+
 - title: 'Pagination Demystified'
   conference: 
     name: 'Rambler.iOS #6'
