@@ -1,15 +1,1 @@
-- title: 'Five Stories about LiveJournal'
-  conference: 
-    name: 'TК° Conf'
-    link: 'http://tkconf.ru/'
-  place: 'Rostov-on-Don, Russia'
-  date: 2016-10-08
-  preview: '/public/img/speaking/talks/livejournal-stories-tkconf.jpg'
 
-- title: 'Clean Unit Tests'
-  conference: 
-    name: 'Rambler.iOS #8'
-    link: 'https://twitter.com/rambler_ios'
-  place: 'Moscow, Russia'
-  date: 2016-10-05
-  preview: '/public/img/speaking/talks/clean-unit-tests-rambler-ios-8.jpg'
