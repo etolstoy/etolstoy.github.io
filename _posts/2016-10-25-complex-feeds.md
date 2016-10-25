@@ -10,7 +10,7 @@ I've faced this problem not very long ago in LiveJournal application. Our produc
 
 <!--more-->
 
-> By the way, I've already made [a blog post](http://etolstoy.com/2016/03/20/promises-and-ads/) were I covered advertisement integration using promise pattern in more details.
+> By the way, I've already made [a blog post](http://etolstoy.com/2016/03/20/promises-and-ads/) where I covered advertisement integration using promise pattern in more details.
 
 The requirements for these elements were not straightforward at all.
 
@@ -29,7 +29,7 @@ Notifications (we'll look only at one type, "Do not forget to turn push notifica
 - If a user interacts with the item but doesn't register, it should be shown on the next launch.
 - ...and a couple of more rules.
 
-The existance of such business requirements literally guarantees that they are not last and in the future we will be asked to integrate other types of feed content.
+The existence of such business requirements literally guarantees that they are not last and in the future we will be asked to integrate other types of feed content.
 
 So, we had to design a module that would work independently of its content. Another nice feature to have was a kind of plugin system, that would allow to add new data sources and cells without touching the whole module.
 
@@ -138,6 +138,6 @@ Let's see what we've got:
   - `CellObjectFactory`, which is responsible for creating a cell from a model object.
 - We can decide whether to show a specific type of content based on a very complex set of rules.
 - Each of content types can be easily disabled by using simple [feature toggles](http://devalloy.github.io/feature-toggle).
-- The whole feed VIPER module is pretty simple, easy to use, extend maintain.
+- The whole feed VIPER module is pretty simple, easy to use, extend and maintain.
 
 Besides this article, you can have a look at [one of our internal meetups](https://www.youtube.com/watch?v=t297guLQ7SE) where my colleague gave a brief talk on the subject. And if you've got questions on how to implement feed pagination - [my own talk](https://www.youtube.com/watch?v=yVL-01AwVOc) will definitely help you with that.
