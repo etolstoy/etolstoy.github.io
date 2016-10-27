@@ -15,6 +15,7 @@
   date: 2016-10-05
   preview: '/public/img/speaking/talks/clean-unit-tests-rambler-ios-8.jpg'
   slides: 'https://speakerdeck.com/etolstoy/clean-unit-tests'
+  video: 'https://www.youtube.com/watch?v=VQscQ-glpwI'
 
 - title: 'Typhoon Explained'
   conference: 
