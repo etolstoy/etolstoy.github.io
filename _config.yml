@@ -11,7 +11,7 @@ permalink:        pretty
 # Setup
 title:            Egor Tolstoy
 tagline:          'iOS Developer'
-description:      'iOS Team Lead @ <a href="http://rambler-co.ru/" target="_blank">Rambler&Co</a>.<br> Interested in software design and task automation.<br>Twitter: <a href="http://twitter.com/igrekde" target="_blank">@igrekde</a>'
+description:      'Head of iOS @ <a href="http://rambler-co.ru/" target="_blank">Rambler&Co</a>.<br> Interested in software design and task automation.<br>Twitter: <a href="http://twitter.com/igrekde" target="_blank">@igrekde</a>'
 url:              http://etolstoy.com
 baseurl:          /
 excerpt_separator: <!--more-->
@@ -19,7 +19,7 @@ excerpt_separator: <!--more-->
 author:
   name:           'Egor Tolstoy'
   email:          'igrekde@gmail.com'
-  url:            https://twitter.com/etolstoy
+  url:            https://twitter.com/igrekde
   email_md5:      faf4a633b0d1e32a07a071039686c868
 
 paginate:         5
