@@ -6,6 +6,7 @@
   date: 2016-10-08
   preview: '/public/img/speaking/talks/livejournal-stories-tkconf.jpg'
   slides: 'https://speakerdeck.com/etolstoy/five-stories-about-livejournal'
+  video: 'https://www.youtube.com/watch?v=pWi297_JdTk'
 
 - title: 'Clean Unit Tests'
   conference: 
