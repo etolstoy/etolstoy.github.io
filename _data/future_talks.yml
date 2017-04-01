@@ -1,1 +1,7 @@
-
+-- title: 'May the Code Review be with you'
+ -  conference: 
+ -    name: 'Mobius 2017'
+ -    link: 'https://mobiusconf.com'
+ -  place: 'St. Petersburg, Russia'
+ -  date: 2017-04-22
+ -  preview: '/public/img/speaking/talks/code-review-mobius.jpg'
