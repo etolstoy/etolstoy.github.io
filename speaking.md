@@ -3,7 +3,7 @@ layout: page
 title: Speaking
 ---
 
-Speaking at tech conferences is a great way of sharing knowledge. I keep on gathering experience in this area in the course of a last year.
+Speaking at tech conferences is a great way of sharing knowledge. I keep on gathering experience in this area.
 
 {% if site.data.future_talks.size > 0 %}
 ---
