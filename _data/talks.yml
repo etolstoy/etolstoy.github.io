@@ -1,3 +1,12 @@
+- title: 'May the Code Review be with you'
+  conference: 
+    name: 'Mobius 2017'
+    link: 'https://mobiusconf.com'
+  place: 'St. Petersburg, Russia'
+  date: 2017-04-21
+  preview: '/public/img/speaking/talks/code-review-mobius.jpg'
+  slides: 'https://speakerdeck.com/etolstoy/may-the-code-review-be-with-you'
+
 - title: 'Five Stories about LiveJournal'
   conference: 
     name: 'TК° Conf'
