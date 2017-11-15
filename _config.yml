@@ -11,7 +11,7 @@ permalink:        pretty
 # Setup
 title:            Egor Tolstoy
 tagline:          'iOS Developer'
-description:      'Head of Mobile Engineering @ <a href="https://www.avito.ru/company" target="_blank">Avito</a>.<br> Interested in software design and task automation.<br>Twitter: <a href="http://twitter.com/igrekde" target="_blank">@igrekde</a>'
+description:      'Head of App Platform Engineering @ <a href="https://www.avito.ru/company" target="_blank">Avito</a>.<br> Interested in software design and task automation.<br>Twitter: <a href="http://twitter.com/igrekde" target="_blank">@igrekde</a>'
 url:              http://etolstoy.com
 baseurl:          /
 excerpt_separator: <!--more-->
