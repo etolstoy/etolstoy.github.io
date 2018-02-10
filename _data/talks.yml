@@ -1,4 +1,14 @@
-- title: 'May the Code Review be with you'
+- title: 'May the Code Review be with you [English]'
+  conference: 
+    name: 'FrenchKit 2017'
+    link: 'http://frenchkit.fr/'
+  place: 'Paris, France'
+  date: 2017-09-22
+  preview: '/public/img/speaking/talks/code-review-mobius.jpg'
+  slides: 'https://speakerdeck.com/etolstoy/may-the-code-review-be-with-you-english'
+  video: 'https://www.youtube.com/watch?v=e9NI5XnEqHA'
+
+- title: 'May the Code Review be with you [Russian]'
   conference: 
     name: 'Mobius 2017'
     link: 'https://mobiusconf.com'
