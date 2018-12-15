@@ -42,8 +42,7 @@ Speaking at tech conferences is a great way of sharing knowledge. I keep on gath
 {% for talk in site.data.talks %}
 	<li>
 		<div class="talk-slides">
-			<img src={{ talk.preview }} alt= {{ talk.title }}>
-  			<a href={{ talk.slides }}><img src={{ talk.preview }} alt= {{ talk.title }}></a>
+  			<a href="{{ talk.slides }}"><img src="{{ talk.preview }}" alt= "{{ talk.title }}"></a>
 		</div>
 		<div class="talk-info">
 			<h4>{{ talk.title }}</h4>
