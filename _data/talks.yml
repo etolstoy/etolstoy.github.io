@@ -1,3 +1,13 @@
+- title: 'Улучшая performance review'
+  conference: 
+    name: 'TeamleadConf 2018'
+    link: 'http://teamleadconf.ru'
+  place: 'Moscow, Russia'
+  date: 2018-02-09
+  preview: '/public/img/speaking/talks/perf-review.jpg'
+  slides: 'https://speakerdeck.com/etolstoy/uluchshaia-performance-review'
+  video: 'https://youtu.be/HKXJ_AWPVBA'
+
 - title: 'May the Code Review be with you [English]'
   conference: 
     name: 'FrenchKit 2017'
