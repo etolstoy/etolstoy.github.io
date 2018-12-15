@@ -18,7 +18,7 @@ Speaking at tech conferences is a great way of sharing knowledge. I keep on gath
 		</div>
 		<div class="talk-info">
 			<h4>{{ talk.title }}</h4>
-			<p><i class="fa fa-comments"></i> <a href={{ conference.link }}>{{ talk.conference.name }}</a></p>
+			<p><i class="fa fa-comments"></i> [{{ talk.conference.name }}]({{ conference.link }})</a></p>
 			<p><i class="fa fa-map-signs"></i> {{ talk.place }}</p>
 			<p><i class="fa fa-calendar-check-o"></i> {{ talk.date | date: "%B %-d, %Y" }}</p>
 			{% if talk.video %}
@@ -46,7 +46,7 @@ Speaking at tech conferences is a great way of sharing knowledge. I keep on gath
 		</div>
 		<div class="talk-info">
 			<h4>{{ talk.title }}</h4>
-			<p><i class="fa fa-comments"></i> <a href={{ conference.link }}>{{ talk.conference.name }}</a></p>
+			<p><i class="fa fa-comments"></i> [{{ talk.conference.name }}]({{ conference.link }})</a></p>
 			<p><i class="fa fa-map-signs"></i> {{ talk.place }}</p>
 			<p><i class="fa fa-calendar-check-o"></i> {{ talk.date | date: "%B %-d, %Y" }}</p>
 			{% if talk.video %}
