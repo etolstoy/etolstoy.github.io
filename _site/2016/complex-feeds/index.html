@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Feed, why so complex? &middot; 
+    
+  </title>
+
+  
+    <meta name="description" content="How to implement a complex feed with multiple types of data." />
+  
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/hyde.css">
+  <link rel="stylesheet" href="/public/css/etolstoy.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon" sizes="57x57" href="/public/icons/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/public/icons/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/public/icons/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/public/icons/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/public/icons/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/public/icons/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/public/icons/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/public/icons/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/public/icons/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192"  href="/public/icons/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/public/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/public/icons/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/public/icons/favicon-16x16.png">
+  <link rel="shortcut icon" href="/public/icons/favicon.ico">
+  <link rel="manifest" href="/public/icons/manifest.json">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="/public/icons/ms-icon-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+
+  <!-- Disqus -->
+  <script id="dsq-count-scr" src="//etolstoy.disqus.com/count.js" async></script>
+</head>
+
+
+  <body class="theme-etolstoy">
+
+    <div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <a href="">
+        <img src="http://www.gravatar.com/avatar/?s=130" class="image-circle" />
+      </a>  
+      <h1>
+        <a href="">
+          
+        </a>
+      </h1>
+      <p class="lead">Egor Tolstoy personal page</p>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="sidebar-nav-item" href="">Blog</a>
+
+      
+
+      
+      
+        
+          
+        
+      
+        
+          
+            <a class="sidebar-nav-item" href="/about/">About</a>
+          
+        
+      
+        
+      
+        
+          
+        
+      
+        
+          
+            <a class="sidebar-nav-item" href="/speaking/">Speaking</a>
+          
+        
+      
+        
+      
+        
+      
+      <a class="sidebar-nav-item" target="_blank" href="">GitHub</a>
+      <a class="sidebar-nav-item" target="_blank" href="">LinkedIn</a>
+    </nav>
+
+    <span class="deprecated"><a href="http://etolstoy.ru/archive" target="_blank">RussianBlog __attribute__ ((deprecated))</a></span>
+    <p>&copy; 2018. All rights reserved.</p>
+  </div>
+</div>
+
+
+    <div class="content container">
+	    <div class="post">
+  <h1 class="post-title">Feed, why so complex?</h1>
+  <span class="post-date">October 25, 2016</span>
+  <p>A feed is probably the most common data representation in mobile applications. Just have a look at any app on your phone - Facebook, Instagram, Tweetbot, and even your favourite e-mail or RSS client. Feeds are everywhere. Despite it’s a pretty common task we still got a lot of questions about its implementation. The problem gets even harder when there are different content types in one feed.</p>
+
+<p>I’ve faced this problem not very long ago in LiveJournal application. Our product manager suddenly decided to add new content types in post feeds - marketing notifications, like <em>don’t forget to turn push-notifications on</em>, and beloved advertisements.</p>
+
+<!--more-->
+
+<blockquote>
+  <p>By the way, I’ve already made <a href="http://etolstoy.com/2016/03/20/promises-and-ads/">a blog post</a> where I covered advertisement integration using promise pattern in more details.</p>
+</blockquote>
+
+<p>The requirements for these elements were not straightforward at all.</p>
+
+<p>Advertisement:</p>
+
+<ul>
+  <li>Show the first element with a specific advertisement identifier after the first 3 posts.</li>
+  <li>After the first advertisement show ads with a different identifier after every 5 posts.</li>
+</ul>
+
+<p>Notifications (we’ll look only at one type, “Do not forget to turn push notifications on”):</p>
+
+<ul>
+  <li>The item should be shown only in a specific kind of feed.</li>
+  <li>The item should be second in the feed, but not the last one.</li>
+  <li>The item should be shown on the first application launch.</li>
+  <li>If a user scrolls the item without interacting it should be shown after 5 days or after 20 launches.</li>
+  <li>If a user dismisses the item it should be shown after updating the application to a new version.</li>
+  <li>If a user interacts with the item but doesn’t register, it should be shown on the next launch.</li>
+  <li>…and a couple of more rules.</li>
+</ul>
+
+<p>The existence of such business requirements literally guarantees that they are not last and in the future we will be asked to integrate other types of feed content.</p>
+
+<p>So, we had to design a module that would work independently of its content. Another nice feature to have was a kind of plugin system, that would allow to add new data sources and cells without touching the whole module.</p>
+
+<p>Until this moment the logic of the feed VIPER module was pretty straightforward:</p>
+
+<p><img src="/public/img/posts/complex-feed-1.png" alt="Pure Feed VIPER Module" /></p>
+
+<p>The first decision was switching to a declarative style of programming. I’ve created a simple <code class="highlighter-rouge">ContentModel</code> class. Its purpose was to describe a feed and unambiguously identify the content type for each indexPath.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@interface ContentModel : NSObject &lt;NSCopying&gt;
+
+- (void)registerSlotForItemType:(ContentListItemType)type
+                       position:(NSUInteger)position;
+
+- (NSUInteger)obtainNumberOfItems;
+
+- (ContentItemType)obtainTypeForPosition:(NSUInteger)position;
+
+- (NSUInteger)obtainRelativeIndexForPosition:(NSUInteger)position
+                                        type:(ContentItemType)type;
+
+@end
+</code></pre></div></div>
+
+<p>This model is retained by the presenter of the module and updates on every feed change event triggered either by user action (removing a notification cell) or by CoreData notification (inserting new posts).</p>
+
+<p>There is another way. You can give up this intermediate state and form a new <code class="highlighter-rouge">ContentModel</code> on every event - but sometimes it can affect the perfomance of your app. Consider these options when implementing your own feed.</p>
+
+<p>The most interesting thing happens in the Interactor. When we want to obtain new ContentModel we call the method:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (ContentModel *)obtainActualContentListContentModel {
+    ContentModel *contentModel = [ContentModel new];
+    for (id&lt;DataProvider&gt; provider in self.dataProviders) {
+        contentModel = [provider enrichContentModel:contentModel];
+    }
+    return contentModel;
+}
+</code></pre></div></div>
+
+<p>The Interactor stores an array of <code class="highlighter-rouge">&lt;DataProvider&gt;</code> objects responsible for providing elements only of a specific type.</p>
+
+<p><img src="/public/img/posts/complex-feed-2.png" alt="Data Providers" /></p>
+
+<p>Let’s look at the implementation of a DataProvider responsible for working with posts. The first method is used to understand the kind of supported item:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (BOOL)isResponsibleForItemType:(ContentItemType)itemType {
+    return itemType == ContentPostItem;
+}
+
+@end
+</code></pre></div></div>
+
+<p>The second method is used for enriching the <code class="highlighter-rouge">ContentModel</code>. It’s implementation can rely on the information from <code class="highlighter-rouge">ContentModel</code> which was added by previous providers. E.g. the <code class="highlighter-rouge">AdvertisementProvider</code> may count the number of posts and insert its elements on the right places:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (ContentModel *)enrichContentModel:(ContentModel *)contentModel {
+    NSUInteger numberOfPosts = self.controller.fetchedObjects.count;
+    
+    for (NSUInteger i = 0; i &lt; numberOfPosts; i++) {
+        [contentModel registerSlotForItemType:ContentListPostItem
+                                     position:i];
+    }
+    
+    return contentModel;
+}
+</code></pre></div></div>
+
+<p><img src="/public/img/posts/complex-feed-3.png" alt="Enriching Content" /></p>
+
+<p>And the last method is used to obtain a specified item from the cache. Interactor passes its index relative to the current <code class="highlighter-rouge">DataProvider</code> to simplify calculations.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (id)obtainElementForRelativePosition:(NSUInteger)position {
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:position
+                                                inSection:0];
+    PostModelObject *post = [self.controller objectAtIndexPath:indexPath];
+    return post;
+}
+</code></pre></div></div>
+
+<p>That’s all for <code class="highlighter-rouge">DataProvider</code>s. The other part of the system is a <code class="highlighter-rouge">CellObjectFactory</code>, which is responsible for creating a correct <code class="highlighter-rouge">CellObject</code> (just a dumb view model) for a given model object. The implementation of the factory is straightforward:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@protocol ContentCellObjectFactory &lt;NSObject&gt;
+
+- (id&lt;ContentListCellObject&gt;)cellObjectWithViewModel:(id)viewModel;
+
+- (BOOL)canProcessViewModel:(id)viewModel;
+
+@end
+</code></pre></div></div>
+
+<p>So, when a <code class="highlighter-rouge">UITableViewDataSource</code> needs a cell, it queries the array of cell object factories until one of them takes responsibility for a given type of model object.</p>
+
+<p>Finally, let’s see the whole data flow:</p>
+
+<p><img src="/public/img/posts/complex-feed-4.png" alt="Enriching Content" /></p>
+
+<p>Let’s see what we’ve got:</p>
+
+<ul>
+  <li>Adding a new type of content is really simple. We just have to add two new objects:
+    <ul>
+      <li><code class="highlighter-rouge">DataProvider</code>, which is responsible for enriching ContentModel and obtaining a model object</li>
+      <li><code class="highlighter-rouge">CellObjectFactory</code>, which is responsible for creating a cell from a model object.</li>
+    </ul>
+  </li>
+  <li>We can decide whether to show a specific type of content based on a very complex set of rules.</li>
+  <li>Each of content types can be easily disabled by using simple <a href="http://devalloy.github.io/feature-toggle">feature toggles</a>.</li>
+  <li>The whole feed VIPER module is pretty simple, easy to use, extend and maintain.</li>
+</ul>
+
+<p>Besides this article, you can have a look at <a href="https://www.youtube.com/watch?v=t297guLQ7SE">one of our internal meetups</a> where my colleague gave a brief talk on the subject. And if you’ve got questions on how to implement feed pagination - <a href="https://www.youtube.com/watch?v=yVL-01AwVOc">my own talk</a> will definitely help you with that.</p>
+
+  <br>
+  <div class="twitter-promo">
+	If you liked this post, you can <a href="https://twitter.com/intent/tweet?url=http://localhost:4000/2016/complex-feeds/&text=Feed, why so complex?&via=igrekde" target="_blank"> share it with your followers</a> or <a href="https://twitter.com/igrekde" target="_blank"> follow me on Twitter</a>!
+</div>
+</div>
+
+<div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+        this.page.url = "http://localhost:4000/2016/complex-feeds/";
+        this.page.identifier = "Feed, why so complex?" ;
+    };
+    (function() {
+        var d = document, s = d.createElement('script');
+        
+        s.src = '//etolstoy.disqus.com/embed.js';
+        
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>  
+    </div>
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46769640-7', 'auto');
+  ga('send', 'pageview');
+
+</script>
+  </body>
+</html>

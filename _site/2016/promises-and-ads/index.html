@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Promises and Ads &middot; 
+    
+  </title>
+
+  
+    <meta name="description" content="A promise is an extremely useful pattern. One of it's possible usages is advertising." />
+  
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/hyde.css">
+  <link rel="stylesheet" href="/public/css/etolstoy.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon" sizes="57x57" href="/public/icons/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/public/icons/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/public/icons/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/public/icons/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/public/icons/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/public/icons/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/public/icons/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/public/icons/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/public/icons/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192"  href="/public/icons/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/public/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/public/icons/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/public/icons/favicon-16x16.png">
+  <link rel="shortcut icon" href="/public/icons/favicon.ico">
+  <link rel="manifest" href="/public/icons/manifest.json">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="/public/icons/ms-icon-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+
+  <!-- Disqus -->
+  <script id="dsq-count-scr" src="//etolstoy.disqus.com/count.js" async></script>
+</head>
+
+
+  <body class="theme-etolstoy">
+
+    <div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <a href="">
+        <img src="http://www.gravatar.com/avatar/?s=130" class="image-circle" />
+      </a>  
+      <h1>
+        <a href="">
+          
+        </a>
+      </h1>
+      <p class="lead">Egor Tolstoy personal page</p>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="sidebar-nav-item" href="">Blog</a>
+
+      
+
+      
+      
+        
+          
+        
+      
+        
+          
+            <a class="sidebar-nav-item" href="/about/">About</a>
+          
+        
+      
+        
+      
+        
+          
+        
+      
+        
+          
+            <a class="sidebar-nav-item" href="/speaking/">Speaking</a>
+          
+        
+      
+        
+      
+        
+      
+      <a class="sidebar-nav-item" target="_blank" href="">GitHub</a>
+      <a class="sidebar-nav-item" target="_blank" href="">LinkedIn</a>
+    </nav>
+
+    <span class="deprecated"><a href="http://etolstoy.ru/archive" target="_blank">RussianBlog __attribute__ ((deprecated))</a></span>
+    <p>&copy; 2018. All rights reserved.</p>
+  </div>
+</div>
+
+
+    <div class="content container">
+	    <div class="post">
+  <h1 class="post-title">Promises and Ads</h1>
+  <span class="post-date">March 20, 2016</span>
+  <p>A promise is a really simple and easy to understand pattern. In general, it’s just an object that represents a result of some action which is not finished yet. That’s all, nothing more.</p>
+
+<p>This simple concept reduces a complexity of asynchronous code a lot. Imagine that you don’t have to write these awful nested completion blocks - every operation is synchronous. You just ask your service to return data - and it returns you something to work with.</p>
+
+<!--more-->
+
+<p>There are a couple of frameworks in iOS development that implement a promise pattern: <a href="https://github.com/BoltsFramework">Bolts</a>, <a href="http://promisekit.org/">PromiseKit</a> and <a href="https://github.com/search?l=Objective-C&amp;q=promise&amp;type=Repositories&amp;utf8=%E2%9C%93">others</a>. They are really great - but sometimes <em>(I’d rather say mostly)</em> they may be an overkill for your project. There is no need to make everything a promise - for example networking is done really easy with the use of chainable NSOperations. However, there still are some areas where the use of promises can simplify your code a lot. Just keep in mind the famous <a href="https://en.wikipedia.org/wiki/KISS_principle">KISS principle</a> - you don’t have to solve a problem in a general way, just focus on completing your current task.</p>
+
+<p>A couple of days ago I took a new Jira ticket - integration of <a href="https://github.com/mopub/mopub-ios-sdk">MoPub advertisement banners</a> in a posts feed. There were some non-trivial constraints:</p>
+
+<ul>
+  <li>The advertisement should start loading only when the cell is about to show,</li>
+  <li>All of the shown advertisements should be cached so that user will see them again after scrolling content backwards.</li>
+  <li>There is an activity indicator while the banner is loading. If the SDK can’t return it - the cell should collapse.</li>
+  <li>The banner is continiously refreshing every 30 seconds while on the screen. This rotation should be paused just before the cell disappears.</li>
+</ul>
+
+<p>We’re using the <a href="https://github.com/rambler-ios/The-Book-of-VIPER">VIPER architecture</a> for a presentation layer and <a href="https://en.wikipedia.org/wiki/Service-oriented_architecture">SOA</a> for business logic. A straightforward solution would result in a simple <code class="highlighter-rouge">Service</code>, responsible for downloading advertisement views with <code class="highlighter-rouge">MoPub SDK</code>, and a <code class="highlighter-rouge">State</code>, which holds them after downloading.</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">AdvertisementService</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">loadAdvertisementWithConfig</span><span class="p">:(</span><span class="n">AdvertisementConfig</span> <span class="o">*</span><span class="p">)</span><span class="nv">config</span> 
+                <span class="nf">withCompletionBlock</span><span class="p">:()</span><span class="nv">block</span><span class="p">;</span>
+
+<span class="k">@end</span>
+</code></pre></div></div>
+
+<p>This approach may be enough for a simple application without many layers between the advertisement provider and receiver. In my case this would result in a number of useless methods in every component of the module. Otherwise the data flow is relatively simple, it has a lot of edge cases, described above.</p>
+
+<p>The easiest solution was to make the <code class="highlighter-rouge">AdvertisementCell</code> an independent module and move there all the advertisement data flow logic. This cell still needs some data from its parent feed module - and in our case it’s a promise. We don’t need to wait for the advertisement to be downloaded anymore - the promise object can be obtained synchronously. Here is what the service looks like now:</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">AdvertisementService</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="n">id</span><span class="o">&lt;</span><span class="n">AdvertisementPromise</span><span class="o">&gt;</span><span class="p">)</span><span class="nf">obtainAdvertisementWithConfig</span><span class="p">:(</span><span class="n">AdvertisementConfig</span> <span class="o">*</span><span class="p">)</span><span class="nv">config</span><span class="p">;</span>
+
+<span class="k">@end</span>
+</code></pre></div></div>
+
+<p>The data is available right at the moment when we need it, so we can safely configure the <code class="highlighter-rouge">UITableViewDataSource</code> and forget about handling edge-cases in the Feed module.</p>
+
+<p>Let’s investigate the <code class="highlighter-rouge">AdvertisementPromise</code> protocol:</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">typedef</span> <span class="kt">void</span><span class="p">(</span><span class="o">^</span><span class="n">BannerAdvertisementPromiseShowBlock</span><span class="p">)(</span><span class="n">UIView</span> <span class="o">&lt;</span><span class="n">AdvertisementView</span><span class="o">&gt;</span> <span class="o">*</span><span class="n">adView</span><span class="p">);</span>
+<span class="k">typedef</span> <span class="kt">void</span><span class="p">(</span><span class="o">^</span><span class="n">BannerAdvertisementPromiseErrorBlock</span><span class="p">)(</span><span class="n">NSError</span> <span class="o">*</span><span class="n">error</span><span class="p">);</span>
+
+<span class="k">@protocol</span> <span class="nc">BannerAdvertisementPromise</span> <span class="o">&lt;</span><span class="n">NSObject</span><span class="o">&gt;</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="n">id</span><span class="o">&lt;</span><span class="n">BannerAdvertisementPromise</span><span class="o">&gt;</span><span class="p">)</span><span class="n">show</span><span class="o">:</span><span class="p">(</span><span class="n">BannerAdvertisementPromiseShowBlock</span><span class="p">)</span><span class="n">block</span><span class="p">;</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="n">id</span><span class="o">&lt;</span><span class="n">BannerAdvertisementPromise</span><span class="o">&gt;</span><span class="p">)</span><span class="nf">error</span><span class="p">:(</span><span class="n">BannerAdvertisementPromiseErrorBlock</span><span class="p">)</span><span class="nv">block</span><span class="p">;</span>
+
+<span class="k">@end</span>
+</code></pre></div></div>
+
+<p>It looks quite simple - the <code class="highlighter-rouge">AdvertisementPresenter</code> defines a behavior for two cases:</p>
+
+<ul>
+  <li>The advertisement view is successfully loaded,</li>
+  <li>The advertisement view has failed to download.</li>
+</ul>
+
+<p>Here is how it looks like in our case:</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">didTriggerViewReadyEventWithPromise</span><span class="p">:(</span><span class="n">id</span><span class="o">&lt;</span><span class="n">BannerAdvertisementPromise</span><span class="o">&gt;</span><span class="p">)</span><span class="nv">promise</span> <span class="p">{</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">promise</span> <span class="o">=</span> <span class="n">promise</span><span class="p">;</span>
+    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">view</span> <span class="nf">showLoader</span><span class="p">];</span>
+
+    <span class="err">@weakify</span><span class="p">(</span><span class="n">self</span><span class="p">);</span>
+    <span class="p">[[</span><span class="n">self</span><span class="p">.</span><span class="n">promise</span> <span class="nf">show</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">UIView</span> <span class="o">&lt;</span><span class="n">AdvertisementView</span><span class="o">&gt;</span> <span class="o">*</span><span class="n">adView</span><span class="p">)</span> <span class="p">{</span>
+        <span class="err">@strongify</span><span class="p">(</span><span class="n">self</span><span class="p">);</span>
+        <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">view</span> <span class="nf">hideLoader</span><span class="p">];</span>
+        <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">view</span> <span class="nf">showAdvertisementView</span><span class="p">:</span><span class="n">adView</span><span class="p">];</span>
+        <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">view</span> <span class="nf">startAdvertisementContiniousRefreshing</span><span class="p">];</span>
+    <span class="p">}]</span> <span class="nf">error</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">NSError</span> <span class="o">*</span><span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="err">@strongify</span><span class="p">(</span><span class="n">self</span><span class="p">);</span>
+        <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">interactor</span> <span class="nf">handleAdvertisementError</span><span class="p">:</span><span class="n">error</span><span class="p">];</span>
+        <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">view</span> <span class="nf">hideLoader</span><span class="p">];</span>
+        <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">moduleOutput</span> <span class="nf">didChangeHeightObjectFromList</span><span class="p">:</span><span class="n">self</span><span class="p">.</span><span class="n">view</span><span class="p">];</span>
+    <span class="p">}];</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Both cases - when the advertisement is already cached and when we have to download it are handled with the same block of code. Super easy to implement, test and maintain. The last part of the puzzle is the implementation of the promise:</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@implementation</span> <span class="nc">MoPubBannerAdvertisementPromise</span>
+
+<span class="cp">#pragma mark - &lt;AdvertisementPromise&gt;
+</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">id</span><span class="o">&lt;</span><span class="n">BannerAdvertisementPromise</span><span class="o">&gt;</span><span class="p">)</span><span class="nf">show</span><span class="p">:(</span><span class="n">BannerAdvertisementPromiseShowBlock</span><span class="p">)</span><span class="nv">block</span> <span class="p">{</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">showBlock</span> <span class="o">=</span> <span class="n">block</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">self</span><span class="p">.</span><span class="n">adView</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">adView</span> <span class="o">=</span> <span class="p">[[</span><span class="n">MPAdView</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithAdUnitId</span><span class="p">:</span><span class="n">self</span><span class="p">.</span><span class="n">config</span><span class="p">.</span><span class="n">adUnitId</span>
+                                                    <span class="nf">size</span><span class="p">:</span><span class="n">self</span><span class="p">.</span><span class="n">config</span><span class="p">.</span><span class="n">adSize</span><span class="p">];</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">adView</span><span class="p">.</span><span class="n">delegate</span> <span class="o">=</span> <span class="n">self</span><span class="p">;</span>
+        <span class="c1">// We don't know if the view would be displayed or not, so it's better to explicitly disable automatic content refreshing.</span>
+        <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">adView</span> <span class="nf">stopAutomaticallyRefreshingContents</span><span class="p">];</span>
+        <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">adView</span> <span class="nf">loadAd</span><span class="p">];</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">showBlock</span> <span class="o">&amp;&amp;</span> <span class="n">self</span><span class="p">.</span><span class="n">hasContentToDisplay</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">showBlock</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">adView</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">self</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="n">id</span><span class="o">&lt;</span><span class="n">BannerAdvertisementPromise</span><span class="o">&gt;</span><span class="p">)</span><span class="nf">error</span><span class="p">:(</span><span class="n">BannerAdvertisementPromiseErrorBlock</span><span class="p">)</span><span class="nv">block</span> <span class="p">{</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">errorBlock</span> <span class="o">=</span> <span class="n">block</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">self</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cp">#pragma mark - &lt;MPAdViewDelegate&gt;
+</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="n">viewControllerForPresentingModalView</span> <span class="p">{</span>
+    <span class="n">UIViewController</span> <span class="o">*</span><span class="n">presentingViewController</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span> <span class="nf">obtainControllerFromResponderChain</span><span class="p">];</span>
+    <span class="k">return</span> <span class="n">presentingViewController</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">adViewDidLoadAd</span><span class="o">:</span><span class="p">(</span><span class="n">MPAdView</span> <span class="o">*</span><span class="p">)</span><span class="n">view</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">showBlock</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">showBlock</span><span class="p">(</span><span class="n">view</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">adViewDidFailToLoadAd</span><span class="o">:</span><span class="p">(</span><span class="n">MPAdView</span> <span class="o">*</span><span class="p">)</span><span class="n">view</span> <span class="p">{</span>
+    <span class="n">NSError</span> <span class="o">*</span><span class="n">failError</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSError</span> <span class="nf">errorWithDomain</span><span class="p">:</span><span class="n">kMoPubErrorDomain</span>
+                                             <span class="nf">code</span><span class="p">:</span><span class="n">LiveJournalMoPubErrorLoadingFailed</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">errorBlock</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">errorBlock</span><span class="p">(</span><span class="n">failError</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="cp">#pragma mark - Private methods
+</span>
+<span class="o">-</span> <span class="p">(</span><span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="n">obtainControllerFromResponderChain</span> <span class="p">{</span>
+    <span class="c1">// We are sure that the first UIViewController from the responder chain can be used for displaying modal controllers with fullscreen advertisements.</span>
+    <span class="n">id</span> <span class="n">responder</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">adView</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="p">[</span><span class="n">responder</span> <span class="nf">isKindOfClass</span><span class="p">:[</span><span class="n">UIViewController</span> <span class="nf">class</span><span class="p">]]</span> <span class="o">&amp;&amp;</span> <span class="n">responder</span> <span class="o">!=</span> <span class="nb">nil</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">responder</span> <span class="o">=</span> <span class="p">[</span><span class="n">responder</span> <span class="nf">nextResponder</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">responder</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">@end</span>
+</code></pre></div></div>
+
+<p>Besides aforementioned advantages this implementation provides encapsulation of specific advertisement framework details. If we’ll ever want to add another one ads network - we’d just add another one promise, the table view cell will remain the same.</p>
+
+<p>Working with advertisements is definitely not the only way of using promise pattern. Besides networking it can be really helpful for obtaining user input from different forms or with any other not synchronous action. If you don’t want to add new huge dependencies to your project, don’t worry. Due to a very simple nature of the pattern it’s really easy to implement it yourself.</p>
+
+  <br>
+  <div class="twitter-promo">
+	If you liked this post, you can <a href="https://twitter.com/intent/tweet?url=http://localhost:4000/2016/promises-and-ads/&text=Promises and Ads&via=igrekde" target="_blank"> share it with your followers</a> or <a href="https://twitter.com/igrekde" target="_blank"> follow me on Twitter</a>!
+</div>
+</div>
+
+<div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+        this.page.url = "http://localhost:4000/2016/promises-and-ads/";
+        this.page.identifier = "Promises and Ads" ;
+    };
+    (function() {
+        var d = document, s = d.createElement('script');
+        
+        s.src = '//etolstoy.disqus.com/embed.js';
+        
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>  
+    </div>
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46769640-7', 'auto');
+  ga('send', 'pageview');
+
+</script>
+  </body>
+</html>

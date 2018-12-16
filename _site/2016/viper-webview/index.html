@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Using UIWebView with VIPER &middot; 
+    
+  </title>
+
+  
+    <meta name="description" content="How to separate UIWebView responsibilities using VIPER architecture" />
+  
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/hyde.css">
+  <link rel="stylesheet" href="/public/css/etolstoy.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon" sizes="57x57" href="/public/icons/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/public/icons/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/public/icons/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/public/icons/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/public/icons/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/public/icons/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/public/icons/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/public/icons/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/public/icons/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192"  href="/public/icons/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/public/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/public/icons/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/public/icons/favicon-16x16.png">
+  <link rel="shortcut icon" href="/public/icons/favicon.ico">
+  <link rel="manifest" href="/public/icons/manifest.json">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="/public/icons/ms-icon-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+
+  <!-- Disqus -->
+  <script id="dsq-count-scr" src="//etolstoy.disqus.com/count.js" async></script>
+</head>
+
+
+  <body class="theme-etolstoy">
+
+    <div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <a href="">
+        <img src="http://www.gravatar.com/avatar/?s=130" class="image-circle" />
+      </a>  
+      <h1>
+        <a href="">
+          
+        </a>
+      </h1>
+      <p class="lead">Egor Tolstoy personal page</p>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="sidebar-nav-item" href="">Blog</a>
+
+      
+
+      
+      
+        
+          
+        
+      
+        
+          
+            <a class="sidebar-nav-item" href="/about/">About</a>
+          
+        
+      
+        
+      
+        
+          
+        
+      
+        
+          
+            <a class="sidebar-nav-item" href="/speaking/">Speaking</a>
+          
+        
+      
+        
+      
+        
+      
+      <a class="sidebar-nav-item" target="_blank" href="">GitHub</a>
+      <a class="sidebar-nav-item" target="_blank" href="">LinkedIn</a>
+    </nav>
+
+    <span class="deprecated"><a href="http://etolstoy.ru/archive" target="_blank">RussianBlog __attribute__ ((deprecated))</a></span>
+    <p>&copy; 2018. All rights reserved.</p>
+  </div>
+</div>
+
+
+    <div class="content container">
+	    <div class="post">
+  <h1 class="post-title">Using UIWebView with VIPER</h1>
+  <span class="post-date">February 28, 2016</span>
+  <p>I was working on <a href="https://itunes.apple.com/app/id981598964">Rambler.Mail</a> project for the whole year. It’s a client for one of the most popular Russian e-mail providers. The application itself is rather ordinary, it has the very same features you’d expect from an e-mail application - and nothing more. However, I spent a lot of time building a solid and maintainable architecture for both business logic and presentation layers.</p>
+
+<p>One of the most interesting features was a rendering engine for displaying e-mail content. I won’t dive into implementation details - all you need to know at the moment is that we used <code class="highlighter-rouge">UIWebView</code> and <a href="https://github.com/marcuswestin/WebViewJavascriptBridge">WebViewJavascriptBridge</a> - a great library for bridging native code and javascript. The result system was monlithic, difficult to understand and reason about - undoubtedly not the best piece of software I’ve ever built.</p>
+
+<p>Before I had a chance to refactor it I was switched to another project. To my great surprise I’ve encountered there a very similar task - I had to build a rendering engine for displaying blog posts. This time I was prepared well - I already knew how <strong>NOT</strong> to build such systems. So, instead of spaghetti code, I’ve used another approach - the cell containing <code class="highlighter-rouge">UIWebView</code> was built using the <strong>VIPER</strong> architecture.</p>
+
+<!--more-->
+
+<p>The fundamental idea of my implementation was to separate <code class="highlighter-rouge">UIWebView</code> responsibilities in two groups: <code class="highlighter-rouge">&lt;WebEngine&gt;</code>, which is a dependency of the <code class="highlighter-rouge">Interactor</code>, and <code class="highlighter-rouge">&lt;WebPresentation&gt;</code>, which belongs to the <code class="highlighter-rouge">View</code>.</p>
+
+<p>Their responsibilities are:</p>
+
+<p><strong>WebEngine</strong></p>
+
+<ul>
+  <li>Loads HTML code,</li>
+  <li>Executes JS scripts,</li>
+  <li>Renders content with a set of predefined actions,</li>
+  <li>Notifies the <code class="highlighter-rouge">Interactor</code> of drawing, rendering and loading processes completion.</li>
+</ul>
+
+<p><strong>WebPresentation</strong></p>
+
+<ul>
+  <li>Notifies the <code class="highlighter-rouge">View</code> of different events: links, images and different embeds taps,</li>
+  <li>Provides an interface of obtaining real content size and other view properties.</li>
+</ul>
+
+<p><img src="/public/img/posts/viper-webview.png" alt="WebView VIPER module scheme" /></p>
+
+<p>The data flow in this module is really simple:</p>
+
+<ol>
+  <li>The <code class="highlighter-rouge">Assembly</code> setups two delegates for  the <code class="highlighter-rouge">WebViewImplementation</code> object - one is the <code class="highlighter-rouge">View</code> and another is the <code class="highlighter-rouge">Interactor</code>.</li>
+  <li>The <code class="highlighter-rouge">View</code> (which is <code class="highlighter-rouge">UITableViewCell</code> in my case) is an entry point of the module. It’s only input is raw html data.</li>
+  <li>The <code class="highlighter-rouge">View</code> passes <code class="highlighter-rouge">UIWebView</code> as a parameter in setup method of <code class="highlighter-rouge">&lt;WebPresentation&gt;</code>.</li>
+  <li>The <code class="highlighter-rouge">View</code> passes HTML data to the <code class="highlighter-rouge">Interactor</code> through the <code class="highlighter-rouge">Presenter</code>.</li>
+  <li>The Interactor setups the <code class="highlighter-rouge">&lt;WebEngine&gt;</code> environment by executing a number of JS scripts.</li>
+  <li>The Interactor modifies this HTML and passes it to the <code class="highlighter-rouge">&lt;WebEngine&gt;</code> using <code class="highlighter-rouge">-loadHtml:</code> method.</li>
+  <li>The <code class="highlighter-rouge">&lt;WebEngine&gt;</code> notifies the <code class="highlighter-rouge">Interactor</code> on loading completion.</li>
+  <li>The <code class="highlighter-rouge">Interactor</code> initiates content rendering by passing a <code class="highlighter-rouge">RenderStrategy</code> to the <code class="highlighter-rouge">&lt;WebEngine&gt;</code>. This strategy incapsulates all of the rendering steps for the current document.</li>
+  <li><code class="highlighter-rouge">&lt;WebEngine&gt;</code> notifies the <code class="highlighter-rouge">Interactor</code> on rendering completion.</li>
+  <li>The <code class="highlighter-rouge">Interactor</code> notifies the <code class="highlighter-rouge">Presenter</code>, which obtains the content size from the <code class="highlighter-rouge">View</code> and passes it to the module output.</li>
+</ol>
+
+<p>These are very simple steps - each method consists of no more than 5 lines of code.</p>
+
+<p>Let’s investigate the implementation of each component.</p>
+
+<p><strong><code class="highlighter-rouge">PostContentView</code></strong></p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">PostContentCell</span> <span class="p">:</span> <span class="nc">UITableViewCell</span> <span class="o">&lt;</span><span class="n">PostContentViewInput</span><span class="p">,</span> <span class="n">WebPresentationDelegate</span><span class="o">&gt;</span>
+
+<span class="k">@property</span> <span class="p">(</span><span class="n">weak</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">IBOutlet</span> <span class="n">UIWebView</span> <span class="o">*</span><span class="n">contentWebView</span><span class="p">;</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">strong</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">id</span><span class="o">&lt;</span><span class="n">PostContentViewOutput</span><span class="o">&gt;</span> <span class="n">output</span><span class="p">;</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">strong</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">id</span><span class="o">&lt;</span><span class="n">WebPresentation</span><span class="o">&gt;</span> <span class="n">webPresentation</span><span class="p">;</span>
+
+<span class="k">@end</span>
+
+<span class="k">@implementation</span> <span class="nc">PostContentCell</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">shouldUpdateCellWithObject</span><span class="p">:(</span><span class="n">PostContentCellObject</span> <span class="o">*</span><span class="p">)</span><span class="nv">object</span> <span class="p">{</span>
+    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">output</span> <span class="nf">didTriggerModuleSetupEventWithHtmlContent</span><span class="p">:</span><span class="n">object</span><span class="p">.</span><span class="n">htmlContent</span><span class="p">];</span>
+    
+    <span class="k">return</span> <span class="nb">YES</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cp">#pragma mark - PostContentViewInput
+</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">setupInitialState</span> <span class="p">{</span>
+    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">webPresentation</span> <span class="nf">setupWithWebView</span><span class="p">:</span><span class="n">self</span><span class="p">.</span><span class="n">contentWebView</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="cp">#pragma mark - WebPresentationDelegate
+</span>
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">webPresentation</span><span class="o">:</span><span class="p">(</span><span class="n">id</span><span class="o">&lt;</span><span class="n">WebPresentation</span><span class="o">&gt;</span><span class="p">)</span><span class="n">webPresentation</span>
+             <span class="n">didTapLink</span><span class="o">:</span><span class="p">(</span><span class="n">NSURL</span> <span class="o">*</span><span class="p">)</span><span class="n">link</span> <span class="p">{</span>
+    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">output</span> <span class="nf">didTriggerLinkTapEventWithURL</span><span class="p">:</span><span class="n">link</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">webPresentation</span><span class="o">:</span><span class="p">(</span><span class="n">id</span><span class="o">&lt;</span><span class="n">WebPresentation</span><span class="o">&gt;</span><span class="p">)</span><span class="n">webPresentation</span>
+    <span class="n">didTapImageWithLink</span><span class="o">:</span><span class="p">(</span><span class="n">NSURL</span> <span class="o">*</span><span class="p">)</span><span class="n">link</span> <span class="p">{</span>
+    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">output</span> <span class="nf">didTriggerImageTapWithURL</span><span class="p">:</span><span class="n">link</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="k">@end</span>
+</code></pre></div></div>
+
+<p><strong><code class="highlighter-rouge">PostContentPresenter</code></strong></p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@implementation</span> <span class="nc">PostContentPresenter</span>
+
+<span class="cp">#pragma mark - PostContentViewOutput
+</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">didTriggerModuleSetupEventWithHtmlContent</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">htmlContent</span> <span class="p">{</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">rawHtmlContent</span> <span class="o">=</span> <span class="n">htmlContent</span><span class="p">;</span>
+    
+    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">interactor</span> <span class="nf">renderContent</span><span class="p">:</span><span class="n">self</span><span class="p">.</span><span class="n">rawHtmlContent</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">didTriggerLinkTapEventWithURL</span><span class="p">:(</span><span class="n">NSURL</span> <span class="o">*</span><span class="p">)</span><span class="nv">url</span> <span class="p">{</span>
+    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">router</span> <span class="nf">showBrowserModuleWithURL</span><span class="p">:</span><span class="n">url</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">didTriggerImageTapWithURL</span><span class="p">:(</span><span class="n">NSURL</span> <span class="o">*</span><span class="p">)</span><span class="nv">url</span> <span class="p">{</span>
+    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">router</span> <span class="nf">showFullscreenImageModuleWithImageURL</span><span class="p">:</span><span class="n">url</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="cp">#pragma mark - PostContentInteractorOutput
+</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">didCompleteRenderingContent</span> <span class="p">{</span>
+    <span class="n">CGFloat</span> <span class="n">contentHeight</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">view</span> <span class="nf">obtainCurrentContentHeight</span><span class="p">];</span>
+    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">moduleOutput</span> <span class="nf">didUpdatePostContentWithContentHeight</span><span class="p">:</span><span class="n">contentHeight</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="k">@end</span>
+
+</code></pre></div></div>
+
+<p><strong><code class="highlighter-rouge">PostContentInteractor</code></strong></p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">PostContentInteractor</span> <span class="p">:</span> <span class="nc">NSObject</span> <span class="o">&lt;</span><span class="n">PostContentInteractorInput</span><span class="p">,</span> <span class="n">WebEngineDelegate</span><span class="o">&gt;</span>
+
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">weak</span><span class="p">)</span> <span class="n">id</span><span class="o">&lt;</span><span class="n">PostContentInteractorOutput</span><span class="o">&gt;</span> <span class="n">output</span><span class="p">;</span>
+
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="n">id</span><span class="o">&lt;</span><span class="n">WebEngine</span><span class="o">&gt;</span> <span class="n">webEngine</span><span class="p">;</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="n">ContentHTMLComposer</span> <span class="o">*</span><span class="n">contentComposer</span><span class="p">;</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="n">JSScriptProvider</span> <span class="o">*</span><span class="n">scriptProvider</span><span class="p">;</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="n">ContentRenderStrategyFactory</span> <span class="o">*</span><span class="n">renderStrategyFactory</span><span class="p">;</span>
+
+<span class="k">@end</span>
+
+<span class="k">@implementation</span> <span class="nc">PostContentInteractor</span>
+
+<span class="cp">#pragma mark - PostContentInteractorInput
+</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">renderContent</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">content</span> <span class="p">{</span>
+    <span class="n">NSArray</span> <span class="o">*</span><span class="n">scripts</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">scriptProvider</span> <span class="nf">obtainScriptsForPostEnvironmentSetup</span><span class="p">];</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="n">script</span> <span class="k">in</span> <span class="n">scripts</span><span class="p">)</span> <span class="p">{</span>
+        <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">webEngine</span> <span class="nf">executeScript</span><span class="p">:</span><span class="n">script</span><span class="p">];</span>
+    <span class="p">}</span>
+    
+    <span class="n">NSString</span> <span class="o">*</span><span class="n">processedContent</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">contentComposer</span> <span class="nf">composeValidHtmlForRenderingFromRawHtml</span><span class="p">:</span><span class="n">content</span><span class="p">];</span>
+    
+    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">webEngine</span> <span class="nf">loadHtml</span><span class="p">:</span><span class="n">processedContent</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="cp">#pragma mark - WebEngineDelegate
+</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">didCompleteLoadingContentWithWebEngine</span><span class="p">:(</span><span class="n">id</span><span class="o">&lt;</span><span class="n">WebEngine</span><span class="o">&gt;</span><span class="p">)</span><span class="nv">webEngine</span> <span class="p">{</span>
+    <span class="n">ContentRenderStrategy</span> <span class="o">*</span><span class="n">renderStrategy</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">renderStrategyFactory</span> <span class="nf">postContentRenderStrategy</span><span class="p">];</span>
+    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">webEngine</span> <span class="nf">renderContentWithStrategy</span><span class="p">:</span><span class="n">renderStrategy</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">didCompleteRenderingContentWithWebEngine</span><span class="p">:(</span><span class="n">id</span><span class="o">&lt;</span><span class="n">WebEngine</span><span class="o">&gt;</span><span class="p">)</span><span class="nv">webEngine</span> <span class="p">{</span>
+    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">output</span> <span class="nf">didCompleteRenderingContent</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="k">@end</span>
+</code></pre></div></div>
+
+<p><strong><code class="highlighter-rouge">WebEngineImplementation</code></strong></p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">WebEngineImplementation</span> <span class="p">:</span> <span class="nc">NSObject</span> <span class="o">&lt;</span><span class="n">WebPresentation</span><span class="p">,</span> <span class="n">WebEngine</span><span class="o">&gt;</span>
+
+<span class="k">@property</span> <span class="p">(</span><span class="n">weak</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">id</span><span class="o">&lt;</span><span class="n">WebEngineDelegate</span><span class="o">&gt;</span> <span class="n">webEngineDelegate</span><span class="p">;</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">weak</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">id</span><span class="o">&lt;</span><span class="n">WebPresentationDelegate</span><span class="o">&gt;</span> <span class="n">webPresentationDelegate</span><span class="p">;</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">strong</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">WebBridgeFactory</span> <span class="o">*</span><span class="n">bridgeFactory</span><span class="p">;</span>
+
+<span class="k">@end</span>
+
+<span class="k">@implementation</span> <span class="nc">WebEngineImplementation</span>
+
+<span class="cp">#pragma mark - WebPresentation
+</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setupWithWebView</span><span class="p">:(</span><span class="n">UIWebView</span> <span class="o">*</span><span class="p">)</span><span class="nv">webView</span> <span class="p">{</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">webView</span> <span class="o">=</span> <span class="n">webView</span><span class="p">;</span>
+    
+    <span class="n">self</span><span class="p">.</span><span class="n">bridge</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">bridgeFactory</span> <span class="nf">obtainBridgeForWebView</span><span class="p">:</span><span class="n">webView</span>
+                                             <span class="nf">webViewDelegate</span><span class="p">:</span><span class="n">self</span><span class="p">];</span>
+    
+    <span class="p">[</span><span class="n">self</span> <span class="nf">setupJavascriptHandlers</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="cp">#pragma mark - Handlers Setup
+</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">setupJavascriptHandlers</span> <span class="p">{</span>
+    <span class="err">@weakify</span><span class="p">(</span><span class="n">self</span><span class="p">);</span>
+    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">bridge</span> <span class="nf">registerHandler</span><span class="p">:</span><span class="n">kImageTapHandler</span>
+                         <span class="nf">handler</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">id</span> <span class="n">data</span><span class="p">,</span> <span class="n">WVJBResponseCallback</span> <span class="n">responseCallback</span><span class="p">)</span> <span class="p">{</span>
+                             <span class="err">@strongify</span><span class="p">(</span><span class="n">self</span><span class="p">);</span>
+                             <span class="n">NSString</span> <span class="o">*</span><span class="n">imageURLString</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="nf">kDataLinkKey</span><span class="p">];</span>
+                             <span class="n">NSURL</span> <span class="o">*</span><span class="n">imageURL</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSURL</span> <span class="nf">URLWithString</span><span class="p">:</span><span class="n">imageURLString</span><span class="p">];</span>
+                             <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">webPresentationDelegate</span> <span class="nf">webPresentation</span><span class="p">:</span><span class="n">self</span>
+                                                       <span class="nf">didTapImageWithLink</span><span class="p">:</span><span class="n">imageURL</span><span class="p">];</span>
+                         <span class="p">}];</span>
+<span class="p">}</span>
+
+<span class="cp">#pragma mark - WebEngine
+</span>
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">loadHtml</span><span class="o">:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">html</span> <span class="p">{</span>
+    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">webView</span> <span class="nf">loadHTMLString</span><span class="p">:</span><span class="n">html</span>
+                         <span class="nf">baseURL</span><span class="p">:</span><span class="nb">nil</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">executeScript</span><span class="o">:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">script</span> <span class="p">{</span>
+    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">webView</span> <span class="nf">stringByEvaluatingJavaScriptFromString</span><span class="p">:</span><span class="n">script</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">renderContentWithStrategy</span><span class="o">:</span><span class="p">(</span><span class="n">ContentRenderStrategy</span> <span class="o">*</span><span class="p">)</span><span class="n">renderStrategy</span> <span class="p">{</span>
+    <span class="n">dispatch_group_t</span> <span class="n">group</span> <span class="o">=</span> <span class="n">dispatch_group_create</span><span class="p">();</span>
+    <span class="n">JSResponseBlock</span> <span class="n">responseBlock</span> <span class="o">=</span> <span class="o">^</span><span class="p">(</span><span class="n">NSDictionary</span> <span class="o">*</span><span class="n">responseData</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">NSString</span> <span class="o">*</span><span class="n">logDescription</span> <span class="o">=</span> <span class="n">responseData</span><span class="p">[</span><span class="nf">JSLogDescriptionKey</span><span class="p">];</span>
+        <span class="n">DDLogVerbose</span><span class="p">(</span><span class="s">@"%@"</span><span class="p">,</span> <span class="n">logDescription</span><span class="p">);</span>
+        <span class="n">dispatch_group_leave</span><span class="p">(</span><span class="n">group</span><span class="p">);</span>
+    <span class="p">};</span>
+    
+    <span class="k">for</span> <span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="n">handlerKey</span> <span class="k">in</span> <span class="n">renderStrategy</span><span class="p">.</span><span class="n">scriptNames</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">dispatch_group_enter</span><span class="p">(</span><span class="n">group</span><span class="p">);</span>
+        <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">bridge</span> <span class="nf">callHandler</span><span class="p">:</span><span class="n">handlerKey</span>
+                            <span class="nf">data</span><span class="p">:</span><span class="n">renderStrategy</span><span class="p">.</span><span class="n">scriptPayloads</span><span class="p">[</span><span class="nf">handlerKey</span><span class="p">]</span>
+                <span class="n">responseCallback</span><span class="o">:</span><span class="n">responseBlock</span><span class="p">];</span>
+    <span class="p">}</span>
+    
+    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">webEngineDelegate</span> <span class="nf">didCompleteRenderingContentWithWebEngine</span><span class="p">:</span><span class="n">self</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="cp">#pragma mark - UIWebViewDelegate
+</span>
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">webViewDidFinishLoad</span><span class="o">:</span><span class="p">(</span><span class="n">UIWebView</span> <span class="o">*</span><span class="p">)</span><span class="n">webView</span> <span class="p">{</span>
+    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">webEngineDelegate</span> <span class="nf">didCompleteLoadingContentWithWebEngine</span><span class="p">:</span><span class="n">self</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="n">webView</span><span class="o">:</span><span class="p">(</span><span class="n">UIWebView</span> <span class="o">*</span><span class="p">)</span><span class="n">webView</span> <span class="n">shouldStartLoadWithRequest</span><span class="o">:</span><span class="p">(</span><span class="n">NSURLRequest</span> <span class="o">*</span><span class="p">)</span><span class="n">request</span> <span class="n">navigationType</span><span class="o">:</span><span class="p">(</span><span class="n">UIWebViewNavigationType</span><span class="p">)</span><span class="n">navigationType</span> <span class="p">{</span>
+    <span class="n">NSString</span> <span class="o">*</span><span class="n">urlString</span> <span class="o">=</span> <span class="n">request</span><span class="p">.</span><span class="n">URL</span><span class="p">.</span><span class="n">absoluteString</span><span class="p">;</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="n">navigationType</span> <span class="o">==</span> <span class="n">UIWebViewNavigationTypeLinkClicked</span><span class="p">)</span> <span class="p">{</span>
+        <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">webPresentationDelegate</span> <span class="nf">webPresentation</span><span class="p">:</span><span class="n">self</span>
+                                           <span class="nf">didTapLink</span><span class="p">:</span><span class="n">request</span><span class="p">.</span><span class="n">URL</span><span class="p">];</span>
+        <span class="k">return</span> <span class="nb">NO</span><span class="p">;</span>
+    <span class="p">}</span>
+    
+    <span class="k">return</span> <span class="nb">YES</span><span class="p">;</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<p>Besides the clear separation of concerns, we’ve also hidden the fact of using a third party library for bridging - it’s just an implementation detail of our <code class="highlighter-rouge">&lt;WebEngine&gt;</code>. Unit tests for this setup are easy and reliable - all that we have to test is the data flow.</p>
+
+<p>Sometimes VIPER may seem like an overcomplicated abstraction. However, that’s definitely not the case. Separating the module logic into different layers helped me to break the indivisible <code class="highlighter-rouge">UIWebView</code> between them.</p>
+
+<p>The rendering process itself is a really interesting topic for another blog post. I’m going to cover content preprocessing mechanism, <code class="highlighter-rouge">WebViewJavascriptBridge</code> usage, callbacks organization, rendering steps for different types of content and so on.</p>
+
+  <br>
+  <div class="twitter-promo">
+	If you liked this post, you can <a href="https://twitter.com/intent/tweet?url=http://localhost:4000/2016/viper-webview/&text=Using UIWebView with VIPER&via=igrekde" target="_blank"> share it with your followers</a> or <a href="https://twitter.com/igrekde" target="_blank"> follow me on Twitter</a>!
+</div>
+</div>
+
+<div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+        this.page.url = "http://localhost:4000/2016/viper-webview/";
+        this.page.identifier = "Using UIWebView with VIPER" ;
+    };
+    (function() {
+        var d = document, s = d.createElement('script');
+        
+        s.src = '//etolstoy.disqus.com/embed.js';
+        
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>  
+    </div>
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46769640-7', 'auto');
+  ga('send', 'pageview');
+
+</script>
+  </body>
+</html>

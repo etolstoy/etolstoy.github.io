@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Divide et Impera &middot; 
+    
+  </title>
+
+  
+    <meta name="description" content="Cleaning up the massive AppDelegate class." />
+  
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/hyde.css">
+  <link rel="stylesheet" href="/public/css/etolstoy.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon" sizes="57x57" href="/public/icons/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/public/icons/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/public/icons/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/public/icons/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/public/icons/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/public/icons/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/public/icons/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/public/icons/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/public/icons/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192"  href="/public/icons/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/public/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/public/icons/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/public/icons/favicon-16x16.png">
+  <link rel="shortcut icon" href="/public/icons/favicon.ico">
+  <link rel="manifest" href="/public/icons/manifest.json">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="/public/icons/ms-icon-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+
+  <!-- Disqus -->
+  <script id="dsq-count-scr" src="//etolstoy.disqus.com/count.js" async></script>
+</head>
+
+
+  <body class="theme-etolstoy">
+
+    <div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <a href="">
+        <img src="http://www.gravatar.com/avatar/?s=130" class="image-circle" />
+      </a>  
+      <h1>
+        <a href="">
+          
+        </a>
+      </h1>
+      <p class="lead">Egor Tolstoy personal page</p>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="sidebar-nav-item" href="">Blog</a>
+
+      
+
+      
+      
+        
+          
+        
+      
+        
+          
+            <a class="sidebar-nav-item" href="/about/">About</a>
+          
+        
+      
+        
+      
+        
+          
+        
+      
+        
+          
+            <a class="sidebar-nav-item" href="/speaking/">Speaking</a>
+          
+        
+      
+        
+      
+        
+      
+      <a class="sidebar-nav-item" target="_blank" href="">GitHub</a>
+      <a class="sidebar-nav-item" target="_blank" href="">LinkedIn</a>
+    </nav>
+
+    <span class="deprecated"><a href="http://etolstoy.ru/archive" target="_blank">RussianBlog __attribute__ ((deprecated))</a></span>
+    <p>&copy; 2018. All rights reserved.</p>
+  </div>
+</div>
+
+
+    <div class="content container">
+	    <div class="post">
+  <h1 class="post-title">Divide et Impera</h1>
+  <span class="post-date">April 17, 2016</span>
+  <p>This is just another story inspired by problems encountered in Rambler.Mail application. Our AppDelegate was really huge. And that wasn’t great at all.</p>
+
+<p>Spotlight, Handoff, state restoration, push notifications - all of this technologies require specific logic. Apple provided us with the only visible solution - <code class="highlighter-rouge">AppDelegate</code> class. And we put these methods in it. Besides system callbacks, this class seems like a nice container for other things as well - CoreData setup, analytics integration,  checking different permissions and showing onboarding screens. At the end <code class="highlighter-rouge">AppDelegate</code> becomes a real mess, which is hard to read and understand.</p>
+
+<!--more-->
+
+<p>One possible solution is applying the <a href="https://en.wikipedia.org/wiki/Single_responsibility_principle">Single Responsibility principle</a> and moving each piece of logic in a separate class. So, say hello to: <code class="highlighter-rouge">StartUpConfigurator</code>, <code class="highlighter-rouge">PushNotificationCenter</code>, <code class="highlighter-rouge">StateRestorationManager</code>, <code class="highlighter-rouge">InitialRouter</code>, <code class="highlighter-rouge">CoreDataStackCoordinator</code> and their friends. The interface of the <code class="highlighter-rouge">AppDelegate</code> after this refactoring will look like:</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">AppDelegate</span> <span class="p">:</span> <span class="nc">UIResponder</span> <span class="o">&lt;</span><span class="n">UIApplicationDelegate</span><span class="o">&gt;</span>
+
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="n">id</span><span class="o">&lt;</span><span class="n">StartUpConfigurator</span><span class="o">&gt;</span> <span class="n">startUpConfigurator</span><span class="p">;</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="n">id</span><span class="o">&lt;</span><span class="n">PushNotificationCenter</span><span class="o">&gt;</span> <span class="n">pushNotificationCenter</span><span class="p">;</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="n">id</span><span class="o">&lt;</span><span class="n">StateRestorationManager</span><span class="o">&gt;</span> <span class="n">stateRestorationManager</span><span class="p">;</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="n">id</span><span class="o">&lt;</span><span class="n">InitialRouter</span><span class="o">&gt;</span> <span class="n">initialRouter</span><span class="p">;</span>
+<span class="p">...</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="n">id</span><span class="o">&lt;</span><span class="n">CoreDataStackCoordinator</span><span class="o">&gt;</span> <span class="n">coreDataStackCoordinator</span><span class="p">;</span>
+
+<span class="k">@end</span>
+</code></pre></div></div>
+
+<p>That’s also not great. By adding multiple dependencies <strong>we increased the overall complexity of the container</strong>. It still implements a huge number of methods with the same implementation - choose a dependency and forward the method call to it. At first, his code is not <a href="https://en.wikipedia.org/wiki/Don%27t_repeat_yourself">DRY</a> at all. Second, it’s pretty easy to forgot to add forwarding somewhere, or to confuse one dependency with another. If it’s not obvious, imagine unit tests for this class. We should verify every method call - and each of these tests would be the same, they just verify the concrete method forwarding.</p>
+
+<blockquote>
+  <p>At this point I should stop and clarify, that I’m dealing with Objective-C case right now. For Swift this approach may be the only acceptable one.</p>
+</blockquote>
+
+<p>Objective-C us a powerful technique just for this matter - it’s message forwarding, especially handy with <code class="highlighter-rouge">NSProxy</code>. Instead of implementing all of the <code class="highlighter-rouge">AppDelegate</code> methods, we give the proxy class an responsibility to handle it automatically. It has a collection of mini-<code class="highlighter-rouge">AppDelegates</code>, responsible for dealing with a strictly defined piece of logic, and forwards the method call to the one capable of handling it.</p>
+
+<p>My colleague created a nice component to abstract away from the inner complexity of the method - <a href="https://github.com/rambler-ios/RamblerAppDelegateProxy">RamblerAppDelegateProxy</a>. The usage is simple:</p>
+
+<ul>
+  <li>Create a <code class="highlighter-rouge">RemoteNotificationAppDelegate</code> class which conforms to <code class="highlighter-rouge">UIApplicationDelegate</code> protocol.</li>
+</ul>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">RemoteNotificationAppDelegate</span> <span class="p">:</span> <span class="nc">NSObject</span> <span class="o">&lt;</span><span class="n">UIApplicationDelegate</span><span class="o">&gt;</span>
+
+<span class="k">@end</span>
+<span class="p">...</span>
+<span class="k">@implementation</span> <span class="nc">RemoteNotificationAppDelegate</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">application</span><span class="p">:(</span><span class="n">UIApplication</span> <span class="o">*</span><span class="p">)</span><span class="nv">application</span> <span class="nf">didFinishLaunchingWithOptions</span><span class="p">:(</span><span class="n">NSDictionary</span> <span class="o">*</span><span class="p">)</span><span class="nv">launchOptions</span> <span class="p">{</span>
+    <span class="n">NSDictionary</span> <span class="o">*</span><span class="n">notification</span> <span class="o">=</span> <span class="p">[</span><span class="n">launchOptions</span> <span class="nf">objectForKey</span><span class="p">:</span><span class="n">UIApplicationLaunchOptionsRemoteNotificationKey</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">notification</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">NSLog</span><span class="p">(</span><span class="s">@"Launching from push %@"</span><span class="p">,</span> <span class="n">notification</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nb">YES</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">application</span><span class="p">:(</span><span class="n">UIApplication</span> <span class="o">*</span><span class="p">)</span><span class="nv">application</span> <span class="nf">didRegisterForRemoteNotificationsWithDeviceToken</span><span class="p">:(</span><span class="n">NSData</span> <span class="o">*</span><span class="p">)</span><span class="nv">deviceToken</span> <span class="p">{</span>
+    <span class="n">NSLog</span><span class="p">(</span><span class="s">@"Did register for remote notifications"</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">application</span><span class="p">:(</span><span class="n">UIApplication</span> <span class="o">*</span><span class="p">)</span><span class="nv">application</span> <span class="nf">didReceiveRemoteNotification</span><span class="p">:(</span><span class="n">NSDictionary</span> <span class="o">*</span><span class="p">)</span><span class="nv">userInfo</span> <span class="p">{</span>
+   <span class="n">NSLog</span><span class="p">(</span><span class="s">@"Did receive remote notification"</span><span class="p">);}</span>
+<span class="p">}</span>
+
+<span class="k">@end</span>
+</code></pre></div></div>
+
+<ul>
+  <li>Change the <code class="highlighter-rouge">main.m</code> file implementation.</li>
+</ul>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+    <span class="err">@autoreleasepool</span> <span class="p">{</span>
+        <span class="p">[[</span><span class="n">RamblerAppDelegateProxy</span> <span class="nf">injector</span><span class="p">]</span> <span class="nf">addAppDelegates</span><span class="p">:@[[</span><span class="n">RemoteNotificationAppDelegate</span> <span class="nf">new</span><span class="p">]]];</span>
+
+        <span class="k">return</span> <span class="n">UIApplicationMain</span><span class="p">(</span><span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">,</span> <span class="nb">nil</span><span class="p">,</span> <span class="n">NSStringFromClass</span><span class="p">([</span><span class="n">RamblerAppDelegateProxy</span> <span class="nf">class</span><span class="p">]));</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<ul>
+  <li>Use your <code class="highlighter-rouge">RemoteNotificationAppDelegate</code> in the same way as the standart <code class="highlighter-rouge">AppDelegate</code> class - just remember to not mess its responsibilities.</li>
+</ul>
+
+<p>This approach helps to keep one of the ugliest parts of the application clean, and the future developers happy.</p>
+
+  <br>
+  <div class="twitter-promo">
+	If you liked this post, you can <a href="https://twitter.com/intent/tweet?url=http://localhost:4000/2016/divide-et-impera/&text=Divide et Impera&via=igrekde" target="_blank"> share it with your followers</a> or <a href="https://twitter.com/igrekde" target="_blank"> follow me on Twitter</a>!
+</div>
+</div>
+
+<div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+        this.page.url = "http://localhost:4000/2016/divide-et-impera/";
+        this.page.identifier = "Divide et Impera" ;
+    };
+    (function() {
+        var d = document, s = d.createElement('script');
+        
+        s.src = '//etolstoy.disqus.com/embed.js';
+        
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>  
+    </div>
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46769640-7', 'auto');
+  ga('send', 'pageview');
+
+</script>
+  </body>
+</html>
