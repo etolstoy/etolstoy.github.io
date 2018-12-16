@@ -1,15 +1,16 @@
+---
+layout: compress
+published: true
+---
 <!DOCTYPE html>
-<html lang="en-us">
-
+<html>
   {% include head.html %}
-
-  <body class="theme-etolstoy">
-
-    {% include sidebar.html %}
-
-    <div class="content container">
-	    {{ content }}  
-    </div>
-    {% include google_analytics.html %}
+  <body>
+    <main class="wrapper">
+      {% include header.html %}
+      {{ content }}
+      {% include footer.html %}
+    </main>
+    {% include foot.html %}
   </body>
 </html>

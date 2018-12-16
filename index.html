@@ -1,43 +1,46 @@
 ---
 layout: default
-title: Egor Tolstoy - Blog
-description: A blog about iOS development, software design and task automation
+title: Home
 ---
 
-<div class="posts">
-  {% for post in paginator.posts %}
-  <div class="post">
-    <h1 class="post-title">
-      <a href="{{ post.url }}">
-        {{ post.title }}
-      </a>
-    </h1>
+{% include intro.html %}
 
-    <span class="post-date">{{ post.date | date: "%B %-d, %Y" }}</span>
-
-    {% if post.excerpt %}
-        {{ post.excerpt }}
-    {% else %}
-        {{ post.content }}
-    {% endif %}
-    <a href="{{ post.url }}#disqus_thread"><a>
+<section class="info">
+  <div class="container">
+    <h2 class="category-title">My Activity</h2>
+    <ul>
+      <li>👨🏻‍💻 Head of App Platform @ <a href="https://avito.tech">Avito</a></li>
+      <li>🎙 Host @ <a href="http://podlodka.tilda.ws">Podlodka Podcast</a></li>
+      <li>🎥 Youtube Blogger @ <a href="https://youtube.com/c/айтихайп">IT Hype</a></li>
+      <li>📱 Program Director @ <a href="http://appsconf.ru">AppsConf</a></li>
+    </ul>
   </div>
-  {% endfor %}
-</div>
-
-<div class="pagination">
-  {% if paginator.next_page %}
-    <a class="pagination-item older" href="{{ site.baseurl }}page{{paginator.next_page}}">Older</a>
-  {% else %}
-    <span class="pagination-item older">Older</span>
-  {% endif %}
-  {% if paginator.previous_page %}
-    {% if paginator.page == 2 %}
-      <a class="pagination-item newer" href="{{ site.baseurl }}">Newer</a>
-    {% else %}
-      <a class="pagination-item newer" href="{{ site.baseurl }}page{{paginator.previous_page}}">Newer</a>
-    {% endif %}
-  {% else %}
-    <span class="pagination-item newer">Newer</span>
-  {% endif %}
-</div>
+</section>
+<section class="info">
+  <div class="container">
+    <h2 class="category-title">Public Speaking</h2>
+    <ul>
+      <li>Avito Mobile: State of the Union | Kolesa Meetup. Alma-Aty, 2018. <a href="https://www.youtube.com/watch?v=fqAjWtJyoyA
+">Video</a>, <a href="https://speakerdeck.com/etolstoy/avito-mobile-state-of-the-union">slides</a>.</li>
+      <li>Developer Experience: The Art of Building Spaceships 🇬🇧 | FrenchKit. Paris, 2018. <a href="https://www.youtube.com/watch?v=sAr2AI3ni7k
+">Video</a>, <a href="https://speakerdeck.com/etolstoy/developer-experience-the-art-of-building-spaceships">slides</a>.</li>
+      <li>Developer Experience: The Art of Building Spaceships 🇬🇧 | SwiftConf. Cologne, 2018. <a href="https://www.youtube.com/watch?v=jSkohApHFEE
+">Video</a>, <a href="https://speakerdeck.com/etolstoy/developer-experience-the-art-of-building-spaceships">slides</a>.</li>
+      <li>Speak | CocoaHeads. Moscow, 2018. <a href="https://youtu.be/ryJj3wo1CF8
+">Video</a>, <a href="https://speakerdeck.com/etolstoy/vystupaitie">slides</a>.</li>
+      <li>Performance Review in Avito | CodeFest. Novosibirsk, 2018. <a href="https://www.youtube.com/watch?v=E41BOgKdFNM">Video</a>, <a href="https://speakerdeck.com/codefest/codefest-2018-ieghor-tolstoi-avito-kak-uluchshit-performance-review">slides</a>.</li>
+      <li>Improving Performance Review | TeamleadConf. Moscow, 2018. <a href="https://youtu.be/HKXJ_AWPVBA">Video</a>, <a href="https://speakerdeck.com/etolstoy/uluchshaia-performance-review">slides</a>.</li>
+      <li>May the Code Review be with you 🇬🇧 | FrenchKit. Paris, 2017. <a href="https://www.youtube.com/watch?v=e9NI5XnEqHA">Video</a>, <a href="https://speakerdeck.com/etolstoy/may-the-code-review-be-with-you-english">slides</a>.</li>
+      <li>May the Code Review be with you | Mobius. St. Petersburg, 2017. <a href="https://www.youtube.com/watch?v=RFGiRuLERmc">Video</a>, <a href="https://speakerdeck.com/etolstoy/may-the-code-review-be-with-you">slides</a>.</li>
+      <li>Five Stories about LiveJournal | TК° Conf. Rostov-on-Don, 2016. <a href="https://www.youtube.com/watch?v=pWi297_JdTk">Video</a>, <a href="https://speakerdeck.com/etolstoy/five-stories-about-livejournal">slides</a>.</li>
+      <li>Clean Unit Tests | Rambler.iOS #8. Moscow, 2016. <a href="https://www.youtube.com/watch?v=VQscQ-glpwI">Video</a>, <a href="https://speakerdeck.com/etolstoy/clean-unit-tests">slides</a>.</li>
+      <li>Typhoon Explained | Mobius. St. Petersburg, 2016. <a href="https://www.youtube.com/watch?v=gNsBnG6g7Ws">Video</a>, <a href="https://speakerdeck.com/etolstoy/typhoon-explained">slides</a>.</li>
+      <li>Pagination Demystified | Rambler.iOS #6. Moscow, 2016. <a href="https://www.youtube.com/watch?v=yVL-01AwVOc">Video</a>, <a href="https://speakerdeck.com/etolstoy/pagination-demystified">slides</a>.</li>
+      <li>Generamba and Code Generation | Rambler.iOS #5. Moscow, 2015. <a href="http://www.youtube.com/watch?v=NXNiN9FaUnY">Video</a>, <a href="https://speakerdeck.com/etolstoy/gienieramba-i-prochiie-aspiekty-kodoghienieratsii-v-viper">slides</a>, <a href="https://github.com/rambler-ios/Generamba">code</a>.</li>
+      <li>The Secrets of VIPER | #{MBLT}Dev'15. Moscow, 2015. <a href="https://www.youtube.com/watch?v=dGTdlNjh_5U">Video</a>, <a href="https://speakerdeck.com/etolstoy/viper-ili-to-o-chiem-vsie-ghovoriat-no-nikto-nie-rasskazyvaiet">slides</a>.</li>
+      <li>Synchronization Problems | Rambler.iOS #4. Moscow, 2015. <a href="http://www.youtube.com/watch?v=y0UQEioIgTQ">Video</a>, <a href="http://www.slideshare.net/Rambler-iOS/ramblerios-4">slides</a>, <a href="https://github.com/rambler-digital-solutions/synchronization-problems">code</a>.</li>
+      <li>iOS Application Exploitation | PHDays V. Moscow, 2015. <a href="http://www.phdays.ru/broadcast/">Video</a>, <a href="http://www.slideshare.net/etolstoy/ios-application-security">slides</a>.</li>
+      <li>Dependency Injection in iOS | Rambler.iOS #3. Moscow, 2015. <a href="https://www.youtube.com/watch?v=LO59z3fjc9k">Video</a>, <a href="https://speakerdeck.com/etolstoy/dependency-injection-v-ios">slides</a>.</li>
+    </ul>
+  </div>
+</section>
